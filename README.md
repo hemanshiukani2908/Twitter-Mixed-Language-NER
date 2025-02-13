@@ -2,15 +2,16 @@
 In this project, Named Entity Recognition (NER) system designed to handle code-mixed Twitter data in multiple Indian languages. The system is tailored to overcome challenges posed by code-switching, noisy text, and linguistic diversity in social media content.
 By leveraging multilingual and Indic-specific pre-trained language models, the project enables accurate extraction of entities like Person, Location, Organization, Event, and Product from mixed-language tweets.
 
-Problem Statement
+<h2>Problem Statement:</h2>
 Processing social media text, especially in multilingual and code-mixed contexts, poses significant challenges:
 
-Code-Mixed Text: Tweets often combine multiple languages (e.g., English + Hindi).
+<h2>Code-Mixed Text:</h2>
+Tweets often combine multiple languages (e.g., English + Hindi).
 Noisy Data: Informal writing styles, abbreviations, and non-standard grammar.
 Low-Resource Languages: Limited resources for Indian languages such as Gujarati, Telugu, and Marathi.
 This project aims to address these challenges by building a structured, multi-stage pipeline for language identification, translation, and entity recognition.
 
-Workflow
+<h2>Workflow</h2>
 The system follows a structured, multi-stage pipeline:
 
 1️⃣ Fine-Tuning mBERT for Language Identification
