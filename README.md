@@ -6,9 +6,9 @@ By leveraging multilingual and Indic-specific pre-trained language models, the p
 Processing social media text, especially in multilingual and code-mixed contexts, poses significant challenges:
 
 <h2>Code-Mixed Text:</h2>
-Tweets often combine multiple languages (e.g., English + Hindi).
-Noisy Data: Informal writing styles, abbreviations, and non-standard grammar.
-Low-Resource Languages: Limited resources for Indian languages such as Gujarati, Telugu, and Marathi.
+Tweets often combine multiple languages (e.g., English + Hindi).<br>
+Noisy Data: Informal writing styles, abbreviations, and non-standard grammar.<br>
+Low-Resource Languages: Limited resources for Indian languages such as Gujarati, Telugu, and Marathi.<br>
 This project aims to address these challenges by building a structured, multi-stage pipeline for language identification, translation, and entity recognition.
 
 <h2>Workflow</h2>
