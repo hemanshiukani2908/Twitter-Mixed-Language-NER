@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Language Processor</title>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-12 px-4">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Mixed Language Named Entity Recognition </h1>
+            <a class="text-gray-600" href="https://github.com/sngrajesh/Twitter-Mixed-Language-NER">Go to Github</a>
+        </div>
+
+        <!-- Main Card -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <!-- Input Section -->
+            <div class="p-6 border-b border-gray-100"> 
+                <h3 class="text-lg font-semibold text-gray-800 mb-3">Input Sentence</h3>
+                <textarea 
+                    id="inputText" 
+                    class="w-full h-32 p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none"
+                    placeholder="Enter your text here..."></textarea>
+                <button 
+                    onclick="processText()" 
+                    class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                    <span>Process Text</span>
+                </button>
+            </div>
+            <!-- Model Selection Dropdown -->
+            <div class="p-6 border-b border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-800 mb-3">Select Model</h3>
+                <div class="flex space-x-4">
+                    <label class="flex items-center">
+                        <input type="radio" name="model" value="BERT Base Model" class="mr-2 accent-blue-600 hover:accent-blue-700" checked>
+                        BERT Base Model
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="model" value="XLM-R Model" class="mr-2 accent-blue-600 hover:accent-blue-700">
+                        XLM-R Model
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="model" value="Fine-Tuned BERT Model" class="mr-2 accent-blue-600 hover:accent-blue-700">
+                        Fine-Tuned BERT Model
+                    </label>
+                </div>
+            </div>            
+            <!-- Results Section -->
+            <div id="result" class="p-6 bg-gray-50">
+                <div class="text-center text-gray-500">Results will appear here</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function processText() {
+            let text = document.getElementById('inputText').value;
+            let resultDiv = document.getElementById('result');
+            let selectedModel = document.querySelector('input[name="model"]:checked').value;
+    
+            // Show loading state
+            resultDiv.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-8">
+                    <div class="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
+                    <p class="mt-4 text-gray-600">Processing your text...</p>
+                </div>
+            `;
+    
+            fetch('/process', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ text: text, model_choice: selectedModel })
+            })
+            .then(response => response.json())
+            .then(data => {
+                let nerHtml = `
+                    <div class="mt-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Named Entity Recognition</h3>
+                        <div class="bg-white rounded-lg border border-gray-200 p-4">
+                            <ul class="space-y-2">
+                `;
+    
+                data.ner_results.forEach(entity => {
+                    nerHtml += `
+                        <li class="flex items-center">
+                            <span class="px-2.5 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-2">
+                                ${entity.type}
+                            </span>
+                            <span class="text-gray-700">${entity.entity}</span>
+                        </li>
+                    `;
+                });
+    
+                nerHtml += `
+                            </ul>
+                        </div>
+                    </div>
+                `;
+    
+                resultDiv.innerHTML = `
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-3">Dominant Language</h3>
+                            <div class="bg-white rounded-lg border border-gray-200 p-4">
+                                <p class="capitalize text-gray-700">${data.detected_language}</p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-3">Translation</h3>
+                            <div class="bg-white rounded-lg border border-gray-200 p-4">
+                                <p class="text-gray-700">${data.translated_text}</p>
+                            </div>
+                        </div>
+                        
+                        ${nerHtml}
+                    </div>
+                `;
+            })
+            .catch(error => {
+                resultDiv.innerHTML = `
+                    <div class="text-center py-6">
+                        <div class="text-red-500 font-medium">An error occurred while processing your request</div>
+                        <p class="text-gray-600 mt-2">Please try again later</p>
+                    </div>
+                `;
+            });
+        }
+    </script>    
+</body>
+</html>
